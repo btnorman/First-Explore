@@ -1,6 +1,12 @@
-# First-Explore Code
+# First-Explore
 
+This repo reproduces the results from the paper, [First-Explore, then Exploit: Meta-Learning Intelligent Exploration](https://arxiv.org/abs/2307.02276). First-Explore is a general framework for meta-RL in which two context-conditioned policies are trained, one to explore (gather an informative environment rollout based on the current context), and one to exploit (map the current context to high reward behaviour). Training is done on a distribtion of environments, and allows the policies to learn (via weight updates) how to best in-context adapt to perform the policy task (exploration or exploitation) based on the prior that an encountered environment is sampled from the training environment distribution. Once trained, the policies then learn about new environments via in-context adaption. By paying the upfront cost of training with meta-RL, First-Explore trades slow RL weight updates for super fast in-context adaption.
 
+By learning two policies, First-Explore decouples Exploration from Exploitation, avoiding the conflict of having to do both simultaneously. This decoupling allows First-Explore to intentionally perform exploration that requires sacrificing episode reward (e.g., spending a whole episode training a new skill the agent is bad at, for example practicing with an unfamilair difficult-to-use-but-effective-once-mastered weapon in a fighting game).
+
+Note: this repo is just an example instance of First-Explore. First-Explore is a framework and applicable to general meta-RL. 
+
+## Repo Structure:
 Plots:
 - Plots contains the code for reproducing the plots, as well as saved models.
 - This done via the notebooks. Running all cells in the notebook produces the figures in the paper.
@@ -17,4 +23,5 @@ Each folder contains: <br>
 - the .py script that performs the training runs, when passed the appropriate arguments (see the .sh script).
 - folders with all the trained models, (saved as run_data.pkl).
 
+## Setup:
 The python environment used, (e.g., 'hf' in the .sh scripts), is specified by the requirements.txt file. This environment should be set as the python kernel of the notebooks. Note, this uses jax with GPU support, which can sometimes be tricky to install, e.g., locally on a mac.
