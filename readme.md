@@ -4,7 +4,7 @@ This repo reproduces the results from the paper, [First-Explore, then Exploit: M
 
 As First-Explore is a meta-RL framework, it is trained on a distribution of environments. Training on a distribution allows the policies to learn (via weight updates) how to best do the following: in-context adapt to perform the policy task (exploration or exploitation) based on the prior that an encountered environment is sampled from the training environment distribution. Once trained, the policies then learn about new environments via in-context adaption (with that adaptation to a new environment being the analogue of standard-RL training on a new environment).
 
-Note: this repo is just an example instance of First-Explore. First-Explore is a framework and applicable to general meta-RL. 
+Note: this repo is just an example instance of First-Explore. First-Explore is a framework and is applicable to general meta-RL. 
 
 ## Repo Structure:
 Plots:
