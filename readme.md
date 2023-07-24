@@ -26,5 +26,11 @@ Each folder contains: <br>
 ## Setup:
 The python environment used, (e.g., 'hf' in the .sh scripts), is specified by the requirements.txt file. This environment should be set as the python kernel of the notebooks. Note, this uses jax with GPU support, which can sometimes be tricky to install, e.g., locally on a mac.
 
-To install jaxlib on linux run:
-> jaxlib==0.3.25+cuda11.cudnn82 -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html --only-binary=jaxlib
+Example Installation for Linux:
+```
+python3 -m venv [env_name]
+source [env_name]/bin/activate
+pip install --upgrade pip
+pip install jaxlib==0.3.25+cuda11.cudnn82 -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html --only-binary=jaxlib
+pip install -r requirements.txt
+```
