@@ -67,7 +67,7 @@ def count(d, chosen=None):
             n *= count(d[key], chosen=chosen)
     return n
 
-def get_args(num_options):
+def get_args(num_options, arg=None):
     # put experiment description here
     parser = argparse.ArgumentParser(description="Experiment to compare clipped and unclipped reward")
     parser.add_argument('--SBATCHID', type=int, help=(
@@ -78,6 +78,9 @@ there are {num_options} options, from 0 to {num_options-1}'''))
 this will be combined with SBATCHID to give an ID for the current run'''))
     parser.add_argument('--group', type=str, help="a group name for the experiment")
     parser.add_argument('--SLURM_JOB_ID', type=str, help="the SLURM_JOB_ID, used for checkpointing")
-    args = parser.parse_args()
+    if arg is None:
+        args = parser.parse_args()
+    else:
+        args = parser.parse_args(arg)
     return args
 

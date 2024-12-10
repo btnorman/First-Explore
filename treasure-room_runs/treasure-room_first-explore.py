@@ -11,11 +11,10 @@ import prep_args
 script_setting = {'roomsize' : C((9,)),
                   'batchsize' : C((128,)),
                   'weighting' : C((True,)),
-                  'seed' : C((4, 5, 6, 7, 8,
-                              9, 10, 11, 12, 13)),
+                  'seed' : C((1,2,3,4,5)),
                   'k' : C((8,)),
                   't' : C((1,)),
-                  'minval' : C((-4,))}
+                  'minval' : C((-4))} # change this minval to 0 for the non-deceptive version
 
 n = prep_args.count(script_setting)
 args = prep_args.get_args(n)
@@ -30,7 +29,7 @@ num_epochs = 1000
 
 ### From Notebook:
 
-from lte_code.bandit import Bandit, RL2_Bandit
+from lte_code.bandit import Bandit
 import jax
 import jax.numpy as jnp
 ACT_DIM = 5
@@ -131,10 +130,8 @@ def feed_token(model_params, cache,
                        timesteps=timesteps,
                        ep_nums=ep_nums)
 
-
-## NOTE! this has a fixed catch length of 20
-
-num_eps = 5
+# set num_eps here
+num_eps = 9
 ep_len = script_setting['roomsize']
 
 cache_len = (num_eps+1)*(ep_len+1)

@@ -11,11 +11,9 @@ import prep_args
 script_setting = {'arm_num':C((10,)),
                   'pulls':C((100,)),
                   'batch_size' : C((128,)),
-                  'bandit_type' : C(("normal",)),
+                  'bandit_type' : C(("mean", "control")),
                   'train_len' : C((200,)),
-                  'seed' : C((4, 5, 6, 7, 8,
-                              9, 10, 11, 12, 13)),
-                  'new_explore' : C((False,))}
+                  'seed' : C((4, 5, 6, 7, 8))}
 
 # Arm number
 # Context Length
@@ -32,12 +30,12 @@ ACT_DIM = script_setting['arm_num']
 SEQ_LEN = script_setting['pulls']
 BATCH_SIZE = script_setting['batch_size']
 
-run_name = f"n{ACT_DIM}_p{SEQ_LEN}_b{BATCH_SIZE}_{script_setting['bandit_type']}_nexp{script_setting['new_explore']}_seed{script_setting['seed']}" #NOTE: does not include train_len
+run_name = f"n{ACT_DIM}_p{SEQ_LEN}_b{BATCH_SIZE}_{script_setting['bandit_type']}_seed{script_setting['seed']}" #NOTE: does not include train_len
 checkpoint_dir = run_name
 
 ### env setup
 
-from lte_code.bandit import Bandit
+from lte_code.bandit import Bandit, MeanBandit
 import jax
 import jax.numpy as jnp
 ACT_DIM = script_setting['arm_num']
@@ -45,7 +43,7 @@ ACT_DIM = script_setting['arm_num']
 from lte_code.lte_model3 import LTE
 from transformers import DecisionTransformerConfig
 
-## note the 4 here!
+
 num_training_steps = 1000*script_setting['train_len']
 
 import optax
@@ -85,6 +83,10 @@ if script_setting['bandit_type'] == 'normal':
                      deterministic=False, noise_scale=0.5)
 elif script_setting['bandit_type'] == 'RL2':
     ENV = RL2_Bandit(key=jax.random.PRNGKey(42), n=ACT_DIM)
+elif script_setting['bandit_type'] == 'mean':
+    ENV = MeanBandit(key=jax.random.PRNGKey(42), n=ACT_DIM, minval=0.5)
+elif script_setting['bandit_type'] == 'control':
+    ENV = MeanBandit(key=jax.random.PRNGKey(42), n=ACT_DIM, minval=0)
 
 batch_step = jax.vmap(ENV.step)
 batch_mset = jax.vmap(ENV.meta_reset)
@@ -93,8 +95,11 @@ if script_setting['bandit_type'] == 'normal':
     maxi = jax.random.normal(key=key, shape=(10000, ACT_DIM)).max(axis=1).mean()
 elif script_setting['bandit_type'] == 'RL2':
     maxi = jax.random.uniform(key=key, shape=(10000, ACT_DIM)).max(axis=1).mean()
-    
-    
+elif script_setting['bandit_type'] == 'mean':
+    maxi = (jax.random.normal(key=key, shape=(10000, ACT_DIM))).at[:, 0].set(0.5).max(axis=1).mean()
+elif script_setting['bandit_type'] == 'control':
+    maxi = (jax.random.normal(key=key, shape=(10000, ACT_DIM))).at[:, 0].set(0).max(axis=1).mean()
+
 
 def reward_sequence(states, actions):
     """takes a batch of states

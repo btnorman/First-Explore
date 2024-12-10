@@ -50,8 +50,8 @@ ipykernel==6.17.1
 ipython==8.7.0
 ipython-genutils==0.2.0
 ipywidgets==8.0.2
+jaxlib==0.3.25+cuda11.cudnn82 -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html --only-binary=jaxlib
 jax==0.3.25
-jaxlib==0.3.25+cuda11.cudnn82
 jedi==0.18.2
 Jinja2==3.1.2
 jsonschema==4.17.3
